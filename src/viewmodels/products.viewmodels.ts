@@ -1,0 +1,34 @@
+import { IQueryViewModel } from '../types/commons.types';
+
+export interface IGetProductsQueryViewModel extends IQueryViewModel {
+    name?: string;
+    calories?: number;
+    price_min?: number;
+    price_max?: number;
+    is_active?: boolean;
+}
+
+export interface ICreateProductViewModel {
+    title: string;
+    description?: string;
+    primary_image_id: string;
+    price: number;
+    category_id: string;
+    stock?: number;
+    servings_per_unit?: number;
+    serving_size?: number;
+    serving_unit?: string;
+    energy?: number;
+    carbs?: number;
+    sugars?: number;
+    diet_fiber?: number;
+    added_sugars?: number;
+    fat?: number;
+    saturated_fat?: number;
+    trans_fat?: number;
+    cholesterol?: number;
+    sodium?: number;
+    protein?: number;
+    is_active: boolean;
+    images: string[];
+}
