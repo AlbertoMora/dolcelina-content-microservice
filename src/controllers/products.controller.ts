@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import { SequelizeService } from '../services/sequelize-service';
 import {
+    ICreateCategoryViewModel,
     ICreateProductViewModel,
+    IGetCategoryViewModel,
     IGetProductsQueryViewModel,
 } from '../viewmodels/products.viewmodels';
 import { Op } from 'sequelize';
@@ -23,6 +25,13 @@ export const getProductsAction = async (
         offset: avoidNanParseInt(offset),
         order: [[orderField, orderDirection]],
         where: queryParams,
+        include: [
+            {
+                model: sequelize.db.category,
+                as: 'category',
+                attributes: ['id', 'name'],
+            },
+        ],
     });
 
     return sendOkResponse(
@@ -79,6 +88,53 @@ export const createProductAction = async (
     );
 };
 
+export const createCategoryAction = async (
+    req: Request<{}, {}, ICreateCategoryViewModel, {}>,
+    res: Response,
+) => {
+    const { name, description } = req.body;
+
+    const sequelize = await SequelizeService.getInstance();
+
+    const newCategory = await sequelize.db.category.create({
+        id: crypto.randomUUID(),
+        name,
+        description,
+        creation_date: moment().utc().toDate(),
+    });
+
+    return sendOkResponse(
+        {
+            status: responseCodes.ok,
+            category: newCategory,
+        },
+        res,
+    );
+};
+
+export const getCategoriesAction = async (
+    req: Request<{}, {}, {}, IGetCategoryViewModel>,
+    res: Response,
+) => {
+    const { orderDirection, orderField, limit, offset } = req.query;
+    const where = getCategoriesQueryParams(req.query);
+
+    const sequelize = await SequelizeService.getInstance();
+    const categories = await sequelize.db.category.findAll({
+        where,
+        limit: avoidNanParseInt(limit),
+        offset: avoidNanParseInt(offset),
+        order: [[orderField, orderDirection]],
+    });
+    return sendOkResponse(
+        {
+            status: responseCodes.ok,
+            categories,
+        },
+        res,
+    );
+};
+
 const getProductQueryParams = (query: IGetProductsQueryViewModel) => {
     const where: any = {};
 
@@ -88,5 +144,15 @@ const getProductQueryParams = (query: IGetProductsQueryViewModel) => {
     if (query.price_max) where.price = { ...where.price, [Op.lte]: query.price_max };
     if (query.is_active !== undefined) where.is_active = query.is_active ? 1 : 0;
 
+    return where;
+};
+
+const getCategoriesQueryParams = (query: IGetCategoryViewModel) => {
+    const where: any = {};
+
+    if (query.id) where.id = query.id;
+    if (query.name) where.name = { [Op.like]: `%${query.name}%` };
+    if (query.description) where.description = { [Op.like]: `%${query.description}%` };
+    if (query.creation_date) where.creation_date = query.creation_date;
     return where;
 };

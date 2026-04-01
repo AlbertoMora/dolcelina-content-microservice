@@ -32,3 +32,15 @@ export interface ICreateProductViewModel {
     is_active: boolean;
     images: string[];
 }
+
+export interface ICreateCategoryViewModel {
+    name: string;
+    description?: string;
+}
+
+export interface IGetCategoryViewModel extends IQueryViewModel {
+    id: string;
+    name?: string;
+    description?: string;
+    creation_date?: Date;
+}

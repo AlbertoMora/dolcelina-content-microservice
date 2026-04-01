@@ -1,5 +1,6 @@
 import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
+import type { category, categoryId } from './category';
 
 export interface productAttributes {
   id: string;
@@ -61,6 +62,11 @@ export class product extends Model<productAttributes, productCreationAttributes>
   last_modified?: Date;
   is_active!: boolean;
 
+  // product belongsTo category via category_id
+  category!: category;
+  getCategory!: Sequelize.BelongsToGetAssociationMixin<category>;
+  setCategory!: Sequelize.BelongsToSetAssociationMixin<category, categoryId>;
+  createCategory!: Sequelize.BelongsToCreateAssociationMixin<category>;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof product {
     return product.init({
@@ -87,7 +93,11 @@ export class product extends Model<productAttributes, productCreationAttributes>
     },
     category_id: {
       type: DataTypes.STRING(50),
-      allowNull: false
+      allowNull: false,
+      references: {
+        model: 'categories',
+        key: 'id'
+      }
     },
     stock: {
       type: DataTypes.INTEGER,
@@ -176,6 +186,13 @@ export class product extends Model<productAttributes, productCreationAttributes>
         using: "BTREE",
         fields: [
           { name: "id" },
+        ]
+      },
+      {
+        name: "products_categories_FK",
+        using: "BTREE",
+        fields: [
+          { name: "category_id" },
         ]
       },
     ]
