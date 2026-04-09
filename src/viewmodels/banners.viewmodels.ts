@@ -3,6 +3,8 @@ import { IQueryViewModel } from '../types/commons.types';
 export interface IGetBannersQueryViewModel extends IQueryViewModel {
     title?: string;
     description?: string;
+    max_date?: string;
+    min_date?: string;
     has_button?: boolean;
     is_active?: boolean;
 }

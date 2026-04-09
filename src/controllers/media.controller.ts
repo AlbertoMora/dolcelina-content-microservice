@@ -14,7 +14,7 @@ import { IQueryViewModel } from '../types/commons.types';
 import { serviceErrors } from '../constants/service-errors';
 import { IGetBatchLinkViewModel, IGetLinkViewModel } from '../viewmodels/link.viewmodel';
 import { getUserSession } from '../utils/session-helper';
-import { s3Key, s3VideoBucketKey } from '../constants/secrets-contants';
+import { s3ImagesBucketKey, s3Key, s3VideoBucketKey } from '../constants/secrets-contants';
 import { stringToSlug } from '../utils/text-helper';
 import moment from 'moment';
 import { IVideoViewModel } from '../viewmodels/video.viewmodel';
@@ -86,15 +86,17 @@ export const getMediaBatchPostLinks = async (
 
     const links = await Promise.all(
         files.map(async file => {
+            const folder = getMediaFolder(type);
             const result = await getMediaUrl(
                 file.filename,
                 file.contentName,
                 file.contentType,
-                getMediaFolder(type),
+                folder,
                 user.id,
+                folder === 'images' ? s3ImagesBucketKey : s3VideoBucketKey,
             );
 
-            if (!result || !result.url) return null;
+            if (!result?.url) return null;
 
             return {
                 id: file.id,
@@ -214,9 +216,10 @@ const getMediaUrl = async (
     contentType: string,
     folder: string,
     userId: string,
+    bucket: string = s3VideoBucketKey,
 ) => {
-    const s3 = await new S3ClientService().init(s3VideoBucketKey, s3Key);
-    if (!s3) return false;
+    const s3 = await new S3ClientService().init(bucket, s3Key);
+    if (!s3) return null;
 
     const fileExt = filename.substring(filename.lastIndexOf('.'));
     const key = `${folder}/${userId}/${stringToSlug(

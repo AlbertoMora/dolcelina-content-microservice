@@ -35,7 +35,7 @@ export const getBannersAction = async (
     const banners = await sequelize.db.banner.findAll({
         limit: avoidNanParseInt(limit),
         offset: avoidNanParseInt(offset),
-        order: [[orderField, orderDirection]],
+        order: [[orderField?.trim() || 'created_at', orderDirection]],
         where: {
             ...params,
         },
@@ -164,12 +164,14 @@ export const getImagePostLink = async (
 };
 
 const getSearchableFields = (query: Omit<IGetBannersQueryViewModel, keyof IQueryViewModel>) => {
-    const { description, has_button, is_active, title } = query;
+    const { description, has_button, is_active, title, max_date, min_date } = query;
     const searchableFields: Record<string, unknown> = {};
 
     if (description) searchableFields.description = { [Op.like]: `%${description}%` };
     if (has_button !== undefined) searchableFields.has_button = has_button ? 1 : 0;
     if (is_active !== undefined) searchableFields.is_active = is_active ? 1 : 0;
     if (title) searchableFields.title = { [Op.like]: `%${title}%` };
+    if (min_date && max_date)
+        searchableFields.creation_date = { [Op.between]: [new Date(min_date), new Date(max_date)] };
     return searchableFields;
 };

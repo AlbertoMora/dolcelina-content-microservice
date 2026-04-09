@@ -6,7 +6,7 @@ import {
     IGetCategoryViewModel,
     IGetProductsQueryViewModel,
 } from '../viewmodels/products.viewmodels';
-import { Op } from 'sequelize';
+import { col, fn, Op } from 'sequelize';
 import { avoidNanParseInt, responseCodes, sendOkResponse } from '@aure/commons';
 import { getUserSession } from '../utils/session-helper';
 import moment from 'moment';
@@ -34,9 +34,21 @@ export const getProductsAction = async (
         ],
     });
 
+    const total = await sequelize.db.product.count({});
+    const minMaxPrice = (await sequelize.db.product.findOne({
+        attributes: [
+            [fn('MIN', col('price')), 'minPrice'],
+            [fn('MAX', col('price')), 'maxPrice'],
+        ],
+    })) as any;
+
     return sendOkResponse(
         {
             products,
+            total,
+            minPrice: minMaxPrice?.getDataValue('minPrice') ?? 0,
+            maxPrice: minMaxPrice?.getDataValue('maxPrice') ?? 0,
+            status: responseCodes.ok,
         },
         res,
     );
@@ -140,9 +152,10 @@ const getProductQueryParams = (query: IGetProductsQueryViewModel) => {
 
     if (query.name) where.name = query.name;
     if (query.calories) where.calories = query.calories;
-    if (query.price_min) where.price = { ...where.price, [Op.gte]: query.price_min };
-    if (query.price_max) where.price = { ...where.price, [Op.lte]: query.price_max };
+    if (query.min_price) where.price = { ...where.price, [Op.gte]: query.min_price };
+    if (query.max_price) where.price = { ...where.price, [Op.lte]: query.max_price };
     if (query.is_active !== undefined) where.is_active = query.is_active ? 1 : 0;
+    if (query.category_id) where.category_id = query.category_id;
 
     return where;
 };

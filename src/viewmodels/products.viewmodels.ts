@@ -3,9 +3,10 @@ import { IQueryViewModel } from '../types/commons.types';
 export interface IGetProductsQueryViewModel extends IQueryViewModel {
     name?: string;
     calories?: number;
-    price_min?: number;
-    price_max?: number;
+    min_price?: number;
+    max_price?: number;
     is_active?: boolean;
+    category_id?: string;
 }
 
 export interface ICreateProductViewModel {
