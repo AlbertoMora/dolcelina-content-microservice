@@ -9,7 +9,7 @@ import { appStart } from './config/app-start';
 import { initMongoDB } from './config/db-config';
 import Sniffr from 'sniffr';
 
-const app = express();
+export const app = express();
 
 const server = createServer(app);
 export const io = new Server(server);
@@ -19,6 +19,14 @@ export const sniffr = new Sniffr();
 setAppConfig(app);
 setMiddlewares(app, express);
 setRoutesConfig(app);
-appStart(server, app);
 
-initMongoDB();
+const bootstrap = () => {
+    appStart(server, app);
+    initMongoDB();
+};
+
+if (process.env.NODE_ENV !== 'test') {
+    bootstrap();
+}
+
+export default app;

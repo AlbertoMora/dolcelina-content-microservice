@@ -7,8 +7,14 @@
     "license": "UNLICENSED",
     "scripts": {
         "start": "nodemon .",
-        "prod": "node .",
-        "tsw": "copyfiles -u 1 src/resources/** dist/ && tsc -w"
+        "build": "tsc && copyfiles -u 1 src/resources/** dist/",
+        "prod": "node dist/index.js",
+        "tsw": "copyfiles -u 1 src/resources/** dist/ && tsc -w",
+        "test": "yarn build && jest --runInBand",
+        "test:unit": "yarn build && jest --runInBand --selectProjects unit",
+        "test:unit:coverage": "yarn build && jest --runInBand --selectProjects unit --coverage",
+        "test:integration": "yarn build && jest --runInBand --selectProjects integration",
+        "test:watch": "yarn build && jest --watch --selectProjects unit"
     },
     "dependencies": {
         "@aure/commons": "^2.0.58",
