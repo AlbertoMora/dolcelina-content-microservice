@@ -1,10 +1,10 @@
 {
-    "name": "wot-player-info-server",
-    "version": "0.0.1",
-    "description": "Wizard of Thyrees Player Info Server",
+    "name": "dolcelina-content-microservice",
+    "version": "1.0.0",
+    "description": "Dolcelina Content Microservice",
     "main": "dist/index.js",
-    "author": "AlbertoMora <amora@auregames.com>",
-    "license": "UNLICENSED",
+    "author": "AlbertoMora <amora@dolcelinadelossantos.com>",
+    "license": "MIT",
     "scripts": {
         "start": "nodemon .",
         "build": "tsc && copyfiles -u 1 src/resources/** dist/",
