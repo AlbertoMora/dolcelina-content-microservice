@@ -29,17 +29,17 @@ export const getVideosAction = async (req: Request<{}, {}, {}, IQueryViewModel>,
         .lean()
         .exec();
     if (!results || results.length === 0)
-        sendClientError(serviceErrors.vid01, res, httpCodes.not_found);
+        return sendClientError(serviceErrors.vid01, res, httpCodes.not_found);
 
-    sendOkResponse({ status: responseCodes.ok, videos: results }, res);
+    return sendOkResponse({ status: responseCodes.ok, videos: results }, res);
 };
 
 export const getVideoByIdAction = async (req: Request<{ id: string }>, res: Response) => {
     const { id } = req.params;
     const result = await VideoTagModel.findById(id).lean().exec();
-    if (!result) sendClientError(serviceErrors.vid02, res, httpCodes.not_found);
+    if (!result) return sendClientError(serviceErrors.vid02, res, httpCodes.not_found);
 
-    sendOkResponse({ status: responseCodes.ok, video: result }, res);
+    return sendOkResponse({ status: responseCodes.ok, video: result }, res);
 };
 
 export const getMediaPostLink = async (
@@ -162,7 +162,7 @@ export const deleteVideoAction = async (req: Request<{ id: string }>, res: Respo
 
     await video.deleteOne();
 
-    sendOkResponse({ status: responseCodes.ok }, res);
+    return sendOkResponse({ status: responseCodes.ok }, res);
 };
 
 const deleteFromS3 = async (bucketId: string, key: string) => {
@@ -177,7 +177,7 @@ export const activateVideoAction = async (req: Request<{ id: string }>, res: Res
     const isOk = await changeVideoStatus(id, true);
     if (!isOk) return sendClientError(serviceErrors.vid07, res, httpCodes.bad_request);
 
-    sendOkResponse({ status: responseCodes.ok }, res);
+    return sendOkResponse({ status: responseCodes.ok }, res);
 };
 
 export const deactivateVideoAction = async (req: Request<{ id: string }>, res: Response) => {
@@ -185,7 +185,7 @@ export const deactivateVideoAction = async (req: Request<{ id: string }>, res: R
     const isOk = await changeVideoStatus(id, false);
     if (!isOk) return sendClientError(serviceErrors.vid07, res, httpCodes.bad_request);
 
-    sendOkResponse({ status: responseCodes.ok }, res);
+    return sendOkResponse({ status: responseCodes.ok }, res);
 };
 
 export const getActiveVideoAction = async (req: Request, res: Response) => {
