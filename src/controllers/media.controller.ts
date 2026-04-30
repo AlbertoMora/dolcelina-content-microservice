@@ -9,7 +9,7 @@ import {
     sendOkResponse,
     sendServerError,
     webErrors,
-} from '@aure/commons';
+} from '@amora95/commons';
 import { IQueryViewModel } from '../types/commons.types';
 import { serviceErrors } from '../constants/service-errors';
 import { IGetBatchLinkViewModel, IGetLinkViewModel } from '../viewmodels/link.viewmodel';
@@ -47,7 +47,7 @@ export const getMediaPostLink = async (
     res: Response,
 ) => {
     const { filename, contentName, contentType, type } = req.query;
-    const { user } = getUserSession(req.headers['authorization'] as string);
+    const { user } = getUserSession(req.headers['authorization'] as string) ?? { user: null };
 
     if (!type) return sendClientError(serviceErrors.vid09, res, httpCodes.bad_request);
 
@@ -56,7 +56,7 @@ export const getMediaPostLink = async (
         contentName,
         contentType,
         getMediaFolder(type),
-        user.id,
+        user?.id ?? 'anonymous',
     );
     if (!result) return sendServerError(serviceErrors.vid06, res, webErrors.srv01);
 

@@ -5,9 +5,10 @@ import {
     ICreateProductViewModel,
     IGetCategoryViewModel,
     IGetProductsQueryViewModel,
+    IUpdateProductViewModel,
 } from '../viewmodels/products.viewmodels';
 import { col, fn, Op } from 'sequelize';
-import { avoidNanParseInt, responseCodes, sendOkResponse } from '@aure/commons';
+import { avoidNanParseInt, responseCodes, sendOkResponse } from '@amora95/commons';
 import { getUserSession } from '../utils/session-helper';
 import moment from 'moment';
 
@@ -60,7 +61,7 @@ export const getProductByIdAction = async (req: Request, res: Response) => {
     const product = await sequelize.db.product.findByPk(id);
 
     if (!product) return res.status(404).send({ message: 'Product not found' });
-    return res.send(product);
+    return res.send({ status: responseCodes.ok, product });
 };
 
 export const createProductAction = async (
@@ -143,6 +144,42 @@ export const getCategoriesAction = async (
             status: responseCodes.ok,
             categories,
         },
+        res,
+    );
+};
+
+export const updateProductAction = async (
+    req: Request<{ id: string }, {}, IUpdateProductViewModel>,
+    res: Response,
+) => {
+    const { id } = req.params;
+    const { images, ...data } = req.body;
+    const sequelize = await SequelizeService.getInstance();
+
+    const product = await sequelize.db.product.findByPk(id);
+    if (!product) return res.status(404).send({ message: 'Product not found' });
+
+    await product.update({
+        ...data,
+        last_modified: moment().utc().toDate(),
+    });
+
+    if (images && images.length > 0) {
+        await sequelize.db.product_image.destroy({ where: { product_id: id } });
+        await Promise.all(
+            images.map(imageId =>
+                sequelize.db.product_image.create({
+                    id: crypto.randomUUID(),
+                    product_id: id,
+                    image_url: imageId,
+                    created_at: moment().utc().toDate(),
+                }),
+            ),
+        );
+    }
+
+    return sendOkResponse(
+        { status: responseCodes.ok, message: 'Product updated successfully', product },
         res,
     );
 };

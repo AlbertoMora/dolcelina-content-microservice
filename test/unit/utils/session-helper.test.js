@@ -1,11 +1,11 @@
 // test/unit/utils/session-helper.test.js
 
-jest.mock('@aure/commons', () => ({
+jest.mock('@amora95/commons', () => ({
     getTokenData: jest.fn(),
 }));
 
 const { getUserSession } = require('../../../dist/utils/session-helper');
-const { getTokenData } = require('@aure/commons');
+const { getTokenData } = require('@amora95/commons');
 
 describe('session-helper', () => {
     beforeEach(() => jest.clearAllMocks());

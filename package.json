@@ -6,7 +6,7 @@
     "author": "AlbertoMora <amora@dolcelinadelossantos.com>",
     "license": "MIT",
     "scripts": {
-        "start": "nodemon .",
+        "start": "nodemon --watch src --ext ts,json --exec \"node --inspect=0.0.0.0:9230 -r ts-node/register ./src/index.ts\"",
         "build": "tsc && copyfiles -u 1 src/resources/** dist/",
         "prod": "node dist/index.js",
         "tsw": "copyfiles -u 1 src/resources/** dist/ && tsc -w",
@@ -17,7 +17,7 @@
         "test:watch": "yarn build && jest --watch --selectProjects unit"
     },
     "dependencies": {
-        "@aure/commons": "^2.0.58",
+        "@amora95/commons": "^2.0.86",
         "@openfga/sdk": "^0.9.0",
         "@types/geoip-lite": "^1.4.4",
         "argon2": "^0.41.1",

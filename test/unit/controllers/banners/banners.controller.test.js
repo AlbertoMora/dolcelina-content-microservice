@@ -5,7 +5,7 @@ const mockGetPresignedUploadingUrl = jest.fn().mockResolvedValue('https://s3.exa
 const mockS3Init = jest.fn();
 
 // ── Module mocks ──────────────────────────────────────────────────────────────
-jest.mock('@aure/commons', () => ({
+jest.mock('@amora95/commons', () => ({
     avoidNanParseInt: jest.fn(v => (v !== undefined ? parseInt(v, 10) : undefined)),
     httpCodes: { ok: 200, bad_request: 400, not_found: 404, server_error: 500 },
     responseCodes: { ok: 'OK' },
@@ -35,7 +35,7 @@ const {
 } = require('../../../../dist/controllers/banners.controller');
 
 const { SequelizeService } = require('../../../../dist/services/sequelize-service');
-const { sendClientError, sendOkResponse, sendServerError, httpCodes } = require('@aure/commons');
+const { sendClientError, sendOkResponse, sendServerError, httpCodes } = require('@amora95/commons');
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 const res = {};

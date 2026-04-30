@@ -9,7 +9,7 @@ import {
     sendOkResponse,
     sendServerError,
     webErrors,
-} from '@aure/commons';
+} from '@amora95/commons';
 import { serviceErrors } from '../constants/service-errors';
 import {
     ICreateBannerViewModel,

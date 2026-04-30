@@ -1,7 +1,7 @@
 // test/unit/controllers/products/products.controller.test.js
 
 // ── Module mocks ──────────────────────────────────────────────────────────────
-jest.mock('@aure/commons', () => ({
+jest.mock('@amora95/commons', () => ({
     avoidNanParseInt: jest.fn(v => (v !== undefined ? parseInt(v, 10) : undefined)),
     responseCodes: { ok: 'OK' },
     sendOkResponse: jest.fn(),
@@ -25,7 +25,7 @@ const {
 } = require('../../../../dist/controllers/products.controller');
 
 const { SequelizeService } = require('../../../../dist/services/sequelize-service');
-const { sendOkResponse } = require('@aure/commons');
+const { sendOkResponse } = require('@amora95/commons');
 const { getUserSession } = require('../../../../dist/utils/session-helper');
 
 // ── Shared response stub ──────────────────────────────────────────────────────

@@ -2,7 +2,7 @@ import { Options, Sequelize } from 'sequelize';
 import { initModels } from '../models/mariadb/init-models';
 
 import fs from 'node:fs';
-import { IDbSecrets, OpenbaoVaultClient } from '@aure/commons';
+import { IDbSecrets, OpenbaoVaultClient } from '@amora95/commons';
 import { dbKey } from '../constants/secrets-contants';
 
 export class SequelizeService {

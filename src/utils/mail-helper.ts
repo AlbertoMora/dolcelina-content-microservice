@@ -10,13 +10,14 @@ export const mailsender = new MailerSend({
 export interface IMailModel {
     mail: string;
     name: string;
+    alias?: string;
 }
 
 export const sendEmail = async (
     subject: string,
     html: string,
     from: IMailModel,
-    to: IMailModel[]
+    to: IMailModel[],
 ) => {
     const sentFrom = new Sender(from.mail, from.name);
     const recipients = to.map(x => new Recipient(x.mail, x.name));

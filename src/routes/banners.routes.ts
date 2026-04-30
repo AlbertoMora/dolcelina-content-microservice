@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { checkTokenMiddleware, controllerHandler } from '@aure/commons';
+import { checkTokenMiddleware, controllerHandler } from '@amora95/commons';
 import {
     createBannerAction,
     deleteBannerAction,

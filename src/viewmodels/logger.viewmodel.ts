@@ -1,4 +1,4 @@
-import { GenericObject } from '@aure/commons';
+import { GenericObject } from '@amora95/commons';
 
 export interface ILogViewmodel {
     transactionId: string;

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { checkPermission } from '../controllers/authorization.controller';
-import { httpCodes, sendClientError, webErrors } from '@aure/commons';
+import { httpCodes, sendClientError, webErrors } from '@amora95/commons';
 import { getUserSession } from '../utils/session-helper';
 
 export const checkPermissionMiddleware =
