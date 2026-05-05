@@ -187,7 +187,7 @@ export const updateProductAction = async (
 const getProductQueryParams = (query: IGetProductsQueryViewModel) => {
     const where: any = {};
 
-    if (query.name) where.name = query.name;
+    if (query.name) where.title = { [Op.like]: `%${query.name}%` };
     if (query.calories) where.calories = query.calories;
     if (query.min_price) where.price = { ...where.price, [Op.gte]: query.min_price };
     if (query.max_price) where.price = { ...where.price, [Op.lte]: query.max_price };
