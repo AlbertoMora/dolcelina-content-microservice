@@ -57,6 +57,7 @@ export const getMediaPostLink = async (
         contentType,
         getMediaFolder(type),
         user?.id ?? 'anonymous',
+        type === 'image' ? s3ImagesBucketKey : s3VideoBucketKey,
     );
     if (!result) return sendServerError(serviceErrors.vid06, res, webErrors.srv01);
 
